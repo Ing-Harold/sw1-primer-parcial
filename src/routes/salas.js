@@ -81,11 +81,12 @@ router.post('/edit/:id', isLoggedIn, async (req, res) => {
 
 router.get('/inSala/:id', isLoggedIn, async (req, res) => {
     const tokenU = req.user.tokenU;
-    console.log(tokenU);
+    console.log(tokenU + 'token de usuario');
     const { id } = req.params;
     const inSala = '?room=' + id;
     const inUs = '&username=' + tokenU;
     const xml = 'http://localhost:8080/model-c4' + inSala + inUs;
+    console.log(xml);
     res.redirect(xml);
 });
 
@@ -94,7 +95,7 @@ router.get('/listUsuarios/:idSala', isLoggedIn, async (req, res, idS) => {
 
     const users = await pool.query('SELECT * FROM users');
     console.log(users);
-    console.log(idSala + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    console.log(idSala + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     idS = idSala;
     res.render('salas/listUsuarios', { users, idSala });
 });

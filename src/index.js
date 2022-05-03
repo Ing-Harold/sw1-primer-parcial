@@ -61,6 +61,7 @@ app.use((req, res, next) => {
 // Routes
 app.use(require('./routes/index'));
 app.use(require('./routes/authentication'));
+app.use('/apis', require('./routes/apis'));
 app.use('/salas', require('./routes/salas'));
 
 // Public
