@@ -20,7 +20,7 @@ app.set('port', process.env.PORT || 5000);
 
 //__dirname es una constantes que me devuelve la direccion de la carpeta
 app.set('views', path.join(__dirname, 'views'));
-app.engine('.hbs', exphbs.engine ({
+app.engine('.hbs', exphbs.engine({
   defaultLayout: 'main',
   layoutsDir: path.join(app.get('views'), 'layouts'),
   partialsDir: path.join(app.get('views'), 'partitials'),
@@ -31,7 +31,7 @@ app.set('view engine', '.hbs');
 
 // Middlewares
 app.use(morgan('dev'));
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(session({
@@ -51,11 +51,12 @@ app.use(passport.session());
 
 // Global variables
 app.use((req, res, next) => {
-     app.locals.message = req.flash('message');
-     app.locals.success = req.flash('success');
-     app.locals.user = req.user;
-    next();
-  });
+  app.locals.message = req.flash('message');
+  app.locals.success = req.flash('success');
+  app.locals.user = req.user;
+  //  app.locals.idSALA = req.
+  next();
+});
 
 // Routes
 app.use(require('./routes/index'));

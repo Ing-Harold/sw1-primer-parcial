@@ -1,11 +1,12 @@
 const express = require('express');
-const router= express.Router();
+const router = express.Router();
 const jwt = require('jsonwebtoken');
 //referencia a la base de datos
 const pool = require('../database');
 const { isLoggedIn } = require('../lib/auth');
 
-router.get('/add', isLoggedIn,(req, res) => {
+
+router.get('/add', isLoggedIn, (req, res) => {
     //renderizar
     res.render('salas/add');
 });
@@ -18,7 +19,7 @@ router.post('/add', isLoggedIn, async (req, res) => {
         description,
         user_id: req.user.id
     };
-    const token = jwt.sign({newSalas}, 'token_sala');
+    const token = jwt.sign({ newSalas }, 'token_sala');
     console.log(token);
     newSalas.tokenS = token;
     const sala = await pool.query('INSERT INTO salas set ?', [newSalas]);
@@ -26,7 +27,7 @@ router.post('/add', isLoggedIn, async (req, res) => {
     newSalas.id = sala.insertId;
     console.log(newSalas.id);
     const newUS = {
-        user_id: req.user.id,  
+        user_id: req.user.id,
         salas_id: newSalas.id
     };
     await pool.query('INSERT INTO usersalas set ?', [newUS]);
@@ -37,14 +38,16 @@ router.post('/add', isLoggedIn, async (req, res) => {
 });
 
 router.get('/', isLoggedIn, async (req, res) => {
-     const salas = await pool.query('SELECT * FROM salas where user_id = ?',[req.user.id]);
+    const salas = await pool.query('SELECT * FROM salas where user_id = ?', [req.user.id]);
     res.render('salas/list', { salas });
 });
 
 router.get('/salasCompartidas', isLoggedIn, async (req, res) => {
-    const salas = await pool.query('SELECT * from salas where id in ( SELECT usersalas.salas_id from usersalas where user_id = ?',[req.user.id],')');
-   console.log(salas);
-    res.render('salas/list', { salas });
+    const idUs = req.user.id;
+    console.log(idUs + 'id usuario');
+    const salas = await pool.query('SELECT * from salas where id in ( SELECT usersalas.salas_id from usersalas where user_id = ?)', [req.user.id]);
+    console.log(salas);
+    res.render('salas/listCompartidas', { salas });
 });
 
 router.get('/delete/:id', async (req, res) => {
@@ -52,7 +55,7 @@ router.get('/delete/:id', async (req, res) => {
     const { id } = req.params;
     //agregar seguridad al eliminar
     await pool.query('DELETE FROM salas WHERE ID = ?', [id]);
-     req.flash('success', 'Sala eliminada de la base de datos');
+    req.flash('success', 'Sala eliminada de la base de datos');
     res.redirect('/salas');
 });
 
@@ -60,12 +63,12 @@ router.get('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     const salas = await pool.query('SELECT * FROM salas WHERE id = ?', [id]);
     console.log(salas);
-    res.render('salas/edit', {sala: salas[0]});
+    res.render('salas/edit', { sala: salas[0] });
 });
 
-router.post('/edit/:id', isLoggedIn,async (req, res) => {
+router.post('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
-    const { title, description, url} = req.body; 
+    const { title, description, url } = req.body;
     const newSala = {
         title,
         description,
@@ -76,7 +79,7 @@ router.post('/edit/:id', isLoggedIn,async (req, res) => {
     res.redirect('/salas');
 });
 
-router.get('/inSala/:id', isLoggedIn,async (req, res) => {
+router.get('/inSala/:id', isLoggedIn, async (req, res) => {
     const tokenU = req.user.tokenU;
     console.log(tokenU);
     const { id } = req.params;
@@ -86,27 +89,32 @@ router.get('/inSala/:id', isLoggedIn,async (req, res) => {
     res.redirect(url);
 });
 
-router.get('/listUsuarios/:idSala', isLoggedIn,async (req, res) => {
+router.get('/listUsuarios/:idSala', isLoggedIn, async (req, res, idS) => {
     const { idSala } = req.params;
-    console.log(idSala);
+
     const users = await pool.query('SELECT * FROM users');
     console.log(users);
-    res.render('salas/listUsuarios', {users, idSala});
+    console.log(idSala + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    idS = idSala;
+    res.render('salas/listUsuarios', { users, idSala });
 });
 
 
-router.post('/compartir', isLoggedIn, async (req, res) => {
+router.post('/compartir/:idSala', isLoggedIn, async (req, res,) => {
+    console.log('hola');
     console.log(req.body);
-    // const newSala = await pool.query('select * salas where id ?', [id]);
-    // console.log(newSala);
+    const { idUsuario } = req.body;
+    const { idSala } = req.params;
 
-    // console.log(salaCompartida);
-    // const newUS = {
-    //     user_id: req.idUsuario,  
-    //     salas_id: newSala.id
-    // };
-    // await pool.query('INSERT INTO usersalas set ?', [newUS]);
-    // req.flash('success', 'Compartido Successfully');
+    console.log(idUsuario + 'id del usuario');
+    console.log(idSala + ' id de las sala');
+    const newUS = {
+        user_id: idUsuario,
+        salas_id: idSala
+    };
+    console.log('newUS');
+    await pool.query('INSERT INTO usersalas set ?', [newUS]);
+    req.flash('success', 'Compartido Successfully');
     res.redirect('/salas');
 });
- module.exports = router;
+module.exports = router;
