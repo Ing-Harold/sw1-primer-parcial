@@ -54,6 +54,7 @@ router.get('/delete/:id', async (req, res) => {
     console.log(req.params.id);
     const { id } = req.params;
     //agregar seguridad al eliminar
+    await pool.query('DELETE FROM usersalas WHERE salas_id = ?', [id]);
     await pool.query('DELETE FROM salas WHERE ID = ?', [id]);
     req.flash('success', 'Sala eliminada de la base de datos');
     res.redirect('/salas');
@@ -79,11 +80,13 @@ router.post('/edit/:id', isLoggedIn, async (req, res) => {
     res.redirect('/salas');
 });
 
-router.get('/inSala/:id', isLoggedIn, async (req, res) => {
+router.get('/inSala/:tokenS', isLoggedIn, async (req, res) => {
     const tokenU = req.user.tokenU;
     console.log(tokenU + 'token de usuario');
-    const { id } = req.params;
-    const inSala = '?room=' + id;
+    const { tokenS } = req.params;
+    console.log(req.params + ' requ parametros');
+    console.log(req.params + ' requ parametros');
+    const inSala = '?room=' + tokenS;
     const inUs = '&username=' + tokenU;
     const xml = 'http://localhost:8080/model-c4' + inSala + inUs;
     console.log(xml);
