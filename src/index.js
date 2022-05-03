@@ -17,7 +17,7 @@ const { database } = require('./keys');
 
 // Settings
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 5000);
 
 //__dirname es una constantes que me devuelve la direccion de la carpeta
 app.set('views', path.join(__dirname, 'views'));

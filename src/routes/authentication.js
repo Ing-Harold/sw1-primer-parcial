@@ -42,7 +42,7 @@ router.get('/logout', (req, res) => {
   res.redirect('/');
 });
 
-router.get('/profile', isLoggedIn, (req, res) => {
+router.get('/profile', isNotLoggedIn, (req, res) => {
   res.render('welcome');
 });
 
