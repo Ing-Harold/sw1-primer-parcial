@@ -12,10 +12,10 @@ router.get('/add', isLoggedIn, (req, res) => {
 });
 
 router.post('/add', isLoggedIn, async (req, res) => {
-    const { title, url, description } = req.body;
+    const { title, xml, description } = req.body;
     const newSalas = {
         title,
-        url,
+        xml,
         description,
         user_id: req.user.id
     };
@@ -68,11 +68,11 @@ router.get('/edit/:id', isLoggedIn, async (req, res) => {
 
 router.post('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
-    const { title, description, url } = req.body;
+    const { title, description, xml } = req.body;
     const newSala = {
         title,
         description,
-        url
+        xml
     };
     await pool.query('UPDATE salas set ? WHERE id = ?', [newSala, id]);
     req.flash('success', 'Sala actualizada Successfully');
@@ -85,8 +85,8 @@ router.get('/inSala/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     const inSala = '?room=' + id;
     const inUs = '&username=' + tokenU;
-    const url = 'http://localhost:8080/model-c4' + inSala + inUs;
-    res.redirect(url);
+    const xml = 'http://localhost:8080/model-c4' + inSala + inUs;
+    res.redirect(xml);
 });
 
 router.get('/listUsuarios/:idSala', isLoggedIn, async (req, res, idS) => {

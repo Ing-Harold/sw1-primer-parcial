@@ -7,6 +7,7 @@ USE sw1;
 CREATE TABLE users (
   id INT(11) NOT NULL PRIMARY KEY (id),
   username VARCHAR(30) NOT NULL,
+  correo varchar(100) not NULL,
   password VARCHAR(60) NOT NULL,
 );
 
@@ -26,7 +27,7 @@ SELECT * FROM users;
 CREATE TABLE salas (
   id INT(11) NOT NULL PRIMARY KEY (id),
   title VARCHAR(100) NOT NULL,
-  url VARCHAR(255) NOT NULL,
+  xml VARCHAR(255) NULL,
   description TEXT,
   user_id INT(11),
   created_at timestamp NOT NULL DEFAULT current_timestamp,
