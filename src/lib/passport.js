@@ -1,5 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const jwt = require('jsonwebtoken');
 
 const pool = require('../database');
 const helpers = require('./helpers');
@@ -39,6 +40,9 @@ passport.use('local.signup', new LocalStrategy({
         correo,
         password
     };
+    const token = jwt.sign({newUser}, 'token_user');
+    console.log(token);
+    newUser.tokenU = token;
     console.log(newUser);
     newUser.password = await helpers.encryptPassword(password);
     //   // Saving in the Database
