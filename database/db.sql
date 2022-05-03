@@ -18,8 +18,6 @@ ALTER TABLE users ADD COLUMN tokenU varchar(500);
 
 DESCRIBE users;
 
-INSERT INTO users (id, username, password, fullname) 
-  VALUES (1, 'john', 'password1', 'John Carter');
 
 SELECT * FROM users;
 
