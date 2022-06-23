@@ -69,8 +69,8 @@ module.exports = router;
 //andres
 
 // 1era api
-router.post('/crearUser/:username', async (req, res) => {
-    const { username } = req.params;
+router.post('/crearUser/', async (req, res) => {
+    const { username } = req.body;
     console.log(req.params);
     const users = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
     if (users.length > 0) {
@@ -91,8 +91,8 @@ router.post('/crearUser/:username', async (req, res) => {
     }// 
 });
 
-router.get('/userToken/:token', async (req, res) => {
-    const { token } = req.params;
+router.get('/userToken/', async (req, res) => {
+    const { token } = req.body;
     console.log(token + 'tokenUser');
     const users = await pool.query('SELECT * FROM users WHERE token = ?', [token]);
     console.log(users);
@@ -141,8 +141,8 @@ router.post('/createPuzzle', async (req, res) => {
     });
 });
 
-router.get('/puzzle/:tokenP', async (req, res) => {
-    const { tokenP } = req.params;
+router.get('/puzzle/', async (req, res) => {
+    const { tokenP } = req.body;
     console.log(tokenP + 'tokenPuzzle');
     const puzzle = await pool.query('SELECT * FROM puzzle WHERE id = ?', [tokenP]);
     if (puzzle.length <= 0) {
