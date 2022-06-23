@@ -40,9 +40,50 @@ ALTER TABLE salas
 DESCRIBE salas;
 
 CREATE TABLE userSalas ( 
-  id int(11) NOT null PRIMARY KEY AUTO_INCREMENT, 
+  id var(11) NOT null PRIMARY KEY AUTO_INCREMENT, 
   user_id int(11) not NULL, 
   salas_id int(11) not NULL, 
   FOREIGN KEY(user_id) REFERENCES users(id), 
   FOREIGN KEY(salas_id) REFERENCES salas(id) 
+);
+
+
+--
+--andres 
+CREATE TABLE users (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (id),
+  username VARCHAR(50) NOT NULL,
+  tokeen varchar(500) not NULL
+);
+
+
+create table Puzzle (
+	id varchar(500) not null, 
+    PRIMARY KEY (id),
+    rowss int,
+    cols int,
+    imageName varchar(200),
+    pieceCount int,
+    showMenu boolean 
+);
+
+CREATE TABLE players ( 
+  id int(11) NOT null AUTO_INCREMENT,
+  PRIMARY KEY(id),  
+  users_id int(11) not NULL, 
+  puzzle_id varchar(500) not NULL, 
+  FOREIGN KEY(users_id) REFERENCES users(id), 
+  FOREIGN KEY(puzzle_id) REFERENCES puzzle(id) 
+);
+
+create table piece (
+	id int(11) not null,
+    PRIMARY KEY (id),
+    x int,
+    y int,
+    top double (12,2),
+    leftt double (12,2),
+    isMov boolean,
+    user varchar(50)
 );
